@@ -1,6 +1,7 @@
 import datetime
 from jose import jwt
 from . import config
+import bcrypt
 
 
 ALGORITHM = "HS256"
@@ -35,3 +36,19 @@ def create_refresh_token(
     to_encode.update({"exp": expire, "sub": str(data.get("sub", 0))})
     encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
+
+
+def get_encrypted_password(plain_password: str) -> str:
+    return bcrypt.hashpw(plain_password.encode("utf-8"), salt=bcrypt.gensalt()).decode(
+        "utf-8"
+    )
+
+
+def set_password(plain_password: str) -> str:
+    return get_encrypted_password(plain_password)
+
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    return bcrypt.checkpw(
+        plain_password.encode("utf-8"), hashed_password.encode("utf-8")
+    )

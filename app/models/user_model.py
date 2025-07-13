@@ -6,8 +6,6 @@ import pydantic
 from pydantic import BaseModel, ConfigDict
 from sqlmodel import SQLModel, Field
 
-import bcrypt
-
 
 class BaseUser(BaseModel):
     model_config = ConfigDict(from_attributes=True, populate_by_name=True)
@@ -15,7 +13,6 @@ class BaseUser(BaseModel):
     username: str = pydantic.Field(json_schema_extra=dict(example="admin"))
     first_name: str = pydantic.Field(json_schema_extra=dict(example="Firstname"))
     last_name: str = pydantic.Field(json_schema_extra=dict(example="Lastname"))
-    status: str = pydantic.Field(json_schema_extra=dict(example="active"))
 
 
 class User(BaseUser):
@@ -38,26 +35,3 @@ class DBUser(BaseUser, SQLModel, table=True):
     last_login_date: datetime.datetime | None = Field(default=None)
     status: str = Field(default="active")
 
-    async def get_encrypted_password(self, plain_password):
-        return bcrypt.hashpw(
-            plain_password.encode("utf-8"), salt=bcrypt.gensalt()
-        ).decode("utf-8")
-
-    async def set_password(self, plain_password):
-        self.password = await self.get_encrypted_password(plain_password)
-
-    async def verify_password(self, plain_password):
-        return bcrypt.checkpw(
-            plain_password.encode("utf-8"), self.password.encode("utf-8")
-        )
-
-
-class Token(BaseModel):
-    access_token: str
-    refresh_token: str
-    token_type: str
-    expires_in: int
-    expires_at: datetime.datetime
-    scope: str
-    issued_at: datetime.datetime
-    user_id: UUID

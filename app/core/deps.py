@@ -1,6 +1,5 @@
 import logging
 
-
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 
@@ -8,8 +7,8 @@ import typing
 from jose import jwt
 
 
-from app.core.database import get_session, AsyncSession
-from app.models.user_model import DBUser, User
+from ..core.database import get_session, AsyncSession
+from ..models.user_model import DBUser, User
 from . import security
 from . import config
 
@@ -54,10 +53,4 @@ async def get_current_user(
     return User(**user.__dict__)
 
 
-async def get_current_active_user(
-    current_user: typing.Annotated[User, Depends(get_current_user)],
-) -> User:
-    if current_user.status != "active":
-        raise HTTPException(status_code=400, detail="Inactive user")
-    return current_user
 
