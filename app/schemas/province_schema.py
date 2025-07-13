@@ -6,7 +6,6 @@ from uuid import UUID
 from app.utils.to_camel_case import to_camel_case
 
 
-# !RESPONSE FOR GET ALL PROVINCES
 class AssignProvinceRequest(BaseModel):
     province_id: UUID
 

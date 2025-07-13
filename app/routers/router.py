@@ -5,7 +5,7 @@ from ..routers.register_router import router as register_router
 from ..routers.province_router import router as province_router
 from ..routers.user_router import router as user_router
 
-
+# Create the main router and include all sub-routers
 router = APIRouter()
 router.include_router(auth_router, prefix="/auth", tags=["authentication"])
 router.include_router(register_router, prefix="/register", tags=["registration"])

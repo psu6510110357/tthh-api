@@ -10,7 +10,7 @@ import uuid
 
 router = APIRouter(tags=["registration"])
 
-
+# Define the registration endpoint
 @router.post("/", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 async def register_user(
     user: RegisterUser,
@@ -37,7 +37,7 @@ async def register_user(
     # Hash the password before storing
     hashed_password = get_encrypted_password(user.password)
 
-    db_user = DBUser(
+    db_user = DBUser(  # Create a new DBUser instance for saving to the database
         email=user.email,
         username=user.username,
         first_name=user.first_name,
@@ -52,7 +52,7 @@ async def register_user(
     await session.refresh(db_user)
 
     # Return the created user
-    return UserResponse(
+    return UserResponse(  # Create UserResponse from DBUser
         id=str(db_user.id),
         username=db_user.username,
         email=db_user.email,

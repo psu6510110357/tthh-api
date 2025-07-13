@@ -9,29 +9,30 @@ from ..models.user_model import DBUser, User
 
 router = APIRouter(tags=["user"])
 
-
+# Define the endpoint to get the current user
 @router.get("/me", response_model=User)
 async def read_current_user(current_user: User = Depends(get_current_user)):
     return current_user
 
 
+# Define the endpoint to assign a province to a user
 @router.patch("/assign-province", response_model=UserResponseWithProvince)
 async def assign_province_to_user(
     req: AssignProvinceRequest,
     session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user),
-):
+):  # Get the current user from the get_current_user dependency
     user = await session.get(DBUser, current_user.id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     province = await session.get(DBProvince, req.province_id)
     if not province:
         raise HTTPException(status_code=404, detail="Province not found")
-    user.province_id = req.province_id
+    user.province_id = req.province_id  # Assign the province ID to the user
     session.add(user)
     await session.commit()
     await session.refresh(user)
-    return UserResponseWithProvince(
+    return UserResponseWithProvince(  # Create UserResponseWithProvince from DBUser
         id=str(user.id),
         username=user.username,
         email=user.email,
@@ -42,6 +43,7 @@ async def assign_province_to_user(
     )
 
 
+# Define the endpoint to get the user's province
 @router.get("/province", response_model=DBProvince)
 async def get_my_province(
     current_user: User = Depends(get_current_user),

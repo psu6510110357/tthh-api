@@ -3,7 +3,7 @@ import uuid
 from app.models.province_model import DBProvince
 from app.core.database import get_session, init_db, close_db
 
-
+# This script seeds the database with initial province data
 async def seed_provinces():
     await init_db()  # Initialize the database engine
     # await drop_db_and_tables()  # Drop existing tables if needed

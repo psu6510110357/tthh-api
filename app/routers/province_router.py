@@ -10,7 +10,7 @@ from ..core.deps import get_current_user
 
 router = APIRouter(tags=["province"])
 
-
+# Define the endpoint to get all provinces
 @router.get("/", response_model=ProvinceListResponse)
 async def read_all_provinces(
     session: AsyncSession = Depends(get_session),

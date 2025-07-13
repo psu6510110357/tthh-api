@@ -17,7 +17,7 @@ import pytest_asyncio
 from app.main import app
 from app.core.database import get_session
 
-
+#
 @pytest_asyncio.fixture
 async def engine():
     """Create test database engine."""

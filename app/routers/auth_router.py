@@ -17,7 +17,7 @@ router = APIRouter(tags=["authentication"])
 
 settings = get_settings()
 
-
+# Define the authentication endpoint
 @router.post(
     "/token",
 )
@@ -38,7 +38,7 @@ async def authentication(
             | (DBUser.email == form_data.username)
         )
     )
-    user = result.one_or_none()
+    user = result.one_or_none() # Get one user or None if not found
 
     print("user", user)
 
@@ -103,7 +103,7 @@ async def authentication(
         minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES
     )
 
-    return Token(
+    return Token(  # return Token object with access and refresh tokens
         access_token=create_access_token(
             data={"sub": str(user.id)}, 
             expires_delta=access_token_expires,

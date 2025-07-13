@@ -9,7 +9,7 @@ from sqlmodel import SQLModel, Field, Relationship
 
 from ..models.province_model import DBProvince
 
-
+# Define the BaseUser model with common fields
 class BaseUser(BaseModel):
     model_config = ConfigDict(from_attributes=True, populate_by_name=True)
     email: str = pydantic.Field(json_schema_extra=dict(example="admin@email.local"))
@@ -17,7 +17,7 @@ class BaseUser(BaseModel):
     first_name: str = pydantic.Field(json_schema_extra=dict(example="Firstname"))
     last_name: str = pydantic.Field(json_schema_extra=dict(example="Lastname"))
 
-
+# Define the User model with additional fields
 class User(BaseUser):
     id: UUID
     last_login_date: datetime.datetime | None = pydantic.Field(
@@ -29,7 +29,7 @@ class User(BaseUser):
     province_id: Optional[UUID] = None
     password: str = ""
 
-
+# Define the database model for User
 class DBUser(BaseUser, SQLModel, table=True):
     id: UUID = Field(default_factory=uuid.uuid4, primary_key=True)
 

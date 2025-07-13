@@ -4,7 +4,7 @@ from pydantic import BaseModel, ConfigDict
 
 from app.utils.to_camel_case import to_camel_case
 
-
+# Define the Token model for authentication
 class Token(BaseModel):
     access_token: str
     refresh_token: str
