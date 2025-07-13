@@ -17,9 +17,11 @@ async def read_current_user(current_user: User = Depends(get_current_user)):
 
 @router.patch("/assign-province", response_model=UserResponseWithProvince)
 async def assign_province_to_user(
-    req: AssignProvinceRequest, session: AsyncSession = Depends(get_session)
+    req: AssignProvinceRequest,
+    session: AsyncSession = Depends(get_session),
+    current_user: User = Depends(get_current_user),
 ):
-    user = await session.get(DBUser, req.user_id)
+    user = await session.get(DBUser, current_user.id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     province = await session.get(DBProvince, req.province_id)
