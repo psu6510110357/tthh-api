@@ -9,7 +9,7 @@ from ..core.security import get_encrypted_password
 from ..schemas.user_schema import RegisterUser, UserResponse
 import uuid
 
-router = APIRouter()
+router = APIRouter(tags=["registration"])
 
 
 @router.post("/", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
