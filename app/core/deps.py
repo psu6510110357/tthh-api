@@ -19,6 +19,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
 settings = config.get_settings()
 
 
+# Get the current user from the token on header request
 async def get_current_user(
     token: typing.Annotated[str, Depends(oauth2_scheme)],
     session: typing.Annotated[AsyncSession, Depends(get_session)],
