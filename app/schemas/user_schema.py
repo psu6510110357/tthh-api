@@ -1,11 +1,11 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, EmailStr
 
 from ..utils.to_camel_case import to_camel_case
 
 
 class RegisterUser(BaseModel):
-    email: str
     username: str
+    email: EmailStr
     first_name: str
     last_name: str
     password: str
