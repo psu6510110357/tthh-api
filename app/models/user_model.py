@@ -26,6 +26,8 @@ class User(BaseUser):
     register_date: datetime.datetime | None = pydantic.Field(
         json_schema_extra=dict(example="2023-01-01T00:00:00.000000"), default=None
     )
+    province_id: Optional[UUID] = None
+    password: str = ""
 
 
 class DBUser(BaseUser, SQLModel, table=True):
