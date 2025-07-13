@@ -6,6 +6,7 @@ from typing import AsyncIterator
 from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlalchemy.ext.asyncio import async_sessionmaker
 from typing import Optional
+from sqlalchemy import text
 
 load_dotenv()
 
@@ -30,7 +31,7 @@ async def init_db():
         connect_args=connect_args,
     )
 
-    await drop_db_and_tables()
+    # await drop_db_and_tables()
     await create_db_and_tables()
 
 
@@ -45,11 +46,12 @@ async def create_db_and_tables():
 
 
 async def drop_db_and_tables():
-    """Drop database tables."""
+    """Drop database tables with CASCADE."""
     if engine is None:
         raise Exception("Database engine is not initialized. Call init_db() first.")
     async with engine.begin() as conn:
-        await conn.run_sync(SQLModel.metadata.drop_all)
+        await conn.execute(text("DROP TABLE IF EXISTS dbuser CASCADE"))
+        await conn.execute(text("DROP TABLE IF EXISTS dbprovince CASCADE"))
 
 
 async def get_session() -> AsyncIterator[AsyncSession]:

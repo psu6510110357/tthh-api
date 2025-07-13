@@ -41,4 +41,4 @@ class DBUser(BaseUser, SQLModel, table=True):
     status: str = Field(default="active")
 
     province_id: Optional[UUID] = Field(default=None, foreign_key="dbprovince.id")
-    province: Optional["DBProvince"] = Relationship(back_populates="users")
+    province: Optional[DBProvince] = Relationship()

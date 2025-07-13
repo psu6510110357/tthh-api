@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from typing import Annotated
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
-from ..models.user_model import User
+from ..models.user_model import DBUser
 from ..models.province_model import DBProvince
 from ..core.database import get_session
 from ..core.security import get_encrypted_password
@@ -18,7 +18,7 @@ async def register_user(
     session: Annotated[AsyncSession, Depends(get_session)],
 ) -> UserResponse:
     # Check if username already exists
-    result = await session.exec(select(User).where(User.username == user.username))
+    result = await session.exec(select(DBUser).where(DBUser.username == user.username))
     existing_user_by_username = result.first()
     if existing_user_by_username:
         raise HTTPException(
@@ -27,7 +27,7 @@ async def register_user(
         )
 
     # Check if email already exists
-    result = await session.exec(select(User).where(User.email == user.email))
+    result = await session.exec(select(DBUser).where(DBUser.email == user.email))
     existing_user_by_email = result.first()
     if existing_user_by_email:
         raise HTTPException(
@@ -46,7 +46,7 @@ async def register_user(
     # Hash the password before storing
     hashed_password = get_encrypted_password(user.password)
 
-    db_user = User(
+    db_user = DBUser(
         email=user.email,
         username=user.username,
         first_name=user.first_name,
