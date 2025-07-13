@@ -12,13 +12,12 @@ load_dotenv()
 
 connect_args = {"ssl": True}
 
-
 engine: Optional[AsyncEngine] = None
 
 
 database_url = os.getenv("DATABASE_URL_PG") or "sqlite+aiosqlite:///database.db"
 
-
+# Initialize the database engine and create tables
 async def init_db():
     print(f"Initializing database with URL: {database_url}")
     """Initialize the database engine and create tables."""
@@ -34,7 +33,7 @@ async def init_db():
     # await drop_db_and_tables()
     await create_db_and_tables()
 
-
+# Create database tables and check if engine is initialized
 async def create_db_and_tables():
     """Create database tables."""
     if engine is None:
@@ -44,7 +43,7 @@ async def create_db_and_tables():
         # await conn.run_sync(SQLModel.metadata.drop_all)
         await conn.run_sync(SQLModel.metadata.create_all)
 
-
+# Drop database tables with CASCADE
 async def drop_db_and_tables():
     """Drop database tables with CASCADE."""
     if engine is None:
@@ -54,6 +53,7 @@ async def drop_db_and_tables():
         await conn.execute(text("DROP TABLE IF EXISTS dbprovince CASCADE"))
 
 
+# Get async database session for dependency injection
 async def get_session() -> AsyncIterator[AsyncSession]:
     """Get async database session."""
     if engine is None:
@@ -65,7 +65,7 @@ async def get_session() -> AsyncIterator[AsyncSession]:
     async with async_session() as session:
         yield session
 
-
+# Close database connection
 async def close_db():
     """Close database connection."""
     global engine
