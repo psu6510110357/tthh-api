@@ -40,3 +40,16 @@ async def assign_province_to_user(
         province_id=str(user.province_id),
         province_name=province.name,
     )
+
+
+@router.get("/province", response_model=DBProvince)
+async def get_my_province(
+    current_user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
+):
+    if not current_user.province_id:
+        raise HTTPException(status_code=404, detail="User has no province assigned")
+    province = await session.get(DBProvince, current_user.province_id)
+    if not province:
+        raise HTTPException(status_code=404, detail="Province not found")
+    return province
