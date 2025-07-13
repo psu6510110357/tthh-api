@@ -3,7 +3,6 @@ from typing import Annotated
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 from ..models.user_model import DBUser
-from ..models.province_model import DBProvince
 from ..core.database import get_session
 from ..core.security import get_encrypted_password
 from ..schemas.user_schema import RegisterUser, UserResponse
@@ -35,14 +34,6 @@ async def register_user(
             detail="User with this email already exists",
         )
 
-    # Check if province exists
-    province = await session.get(DBProvince, user.province_id)
-    if not province:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Province not found",
-        )
-
     # Hash the password before storing
     hashed_password = get_encrypted_password(user.password)
 
@@ -53,7 +44,6 @@ async def register_user(
         last_name=user.last_name,
         password=hashed_password,  # Store hashed password
         id=uuid.uuid4(),  # Generate UUID
-        province_id=user.province_id,  # Assign province
     )
 
     # Save user to the database
@@ -68,5 +58,4 @@ async def register_user(
         email=db_user.email,
         first_name=db_user.first_name,
         last_name=db_user.last_name,
-        province_id=str(db_user.province_id),
     )

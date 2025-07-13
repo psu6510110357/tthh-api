@@ -1,13 +1,12 @@
 import datetime
 import uuid
 from app.models.province_model import DBProvince
-from app.core.database import create_db_and_tables, get_session, init_db, close_db, drop_db_and_tables
+from app.core.database import get_session, init_db, close_db
 
 
 async def seed_provinces():
     await init_db()  # Initialize the database engine
-    await drop_db_and_tables()  # Drop existing tables if needed
-    await create_db_and_tables()  # Create new tables
+    # await drop_db_and_tables()  # Drop existing tables if needed
     provinces = [
         {"name": "Province A", "is_secondary": False, "tax_reduction_info": "Info A"},
         {"name": "Province B", "is_secondary": True, "tax_reduction_info": "Info B"},

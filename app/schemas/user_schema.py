@@ -1,5 +1,4 @@
 from pydantic import BaseModel, ConfigDict
-from uuid import UUID
 
 from ..utils.to_camel_case import to_camel_case
 
@@ -10,7 +9,6 @@ class RegisterUser(BaseModel):
     first_name: str
     last_name: str
     password: str
-    province_id: UUID
 
     model_config = ConfigDict(
         validate_by_name=True, alias_generator=to_camel_case, populate_by_name=True
@@ -23,7 +21,15 @@ class UserResponse(BaseModel):
     email: str
     first_name: str
     last_name: str
+
+    model_config = ConfigDict(
+        validate_by_name=True, alias_generator=to_camel_case, populate_by_name=True
+    )
+
+
+class UserResponseWithProvince(UserResponse):
     province_id: str
+    province_name: str
 
     model_config = ConfigDict(
         validate_by_name=True, alias_generator=to_camel_case, populate_by_name=True
