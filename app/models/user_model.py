@@ -1,10 +1,13 @@
 import datetime
 from uuid import UUID
 import uuid
+from typing import Optional
 
 import pydantic
 from pydantic import BaseModel, ConfigDict
-from sqlmodel import SQLModel, Field
+from sqlmodel import SQLModel, Field, Relationship
+
+from ..models.province_model import DBProvince
 
 
 class BaseUser(BaseModel):
@@ -35,3 +38,5 @@ class DBUser(BaseUser, SQLModel, table=True):
     last_login_date: datetime.datetime | None = Field(default=None)
     status: str = Field(default="active")
 
+    province_id: Optional[UUID] = Field(default=None, foreign_key="dbprovince.id")
+    province: Optional[DBProvince] = Relationship(back_populates="users")

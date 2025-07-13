@@ -1,8 +1,9 @@
 import datetime
 import uuid
 from pydantic import BaseModel
-from sqlmodel import UUID, SQLModel, Field
-from typing import Optional
+from sqlmodel import UUID, SQLModel, Field, Relationship
+from typing import Optional, List
+from ..models.user_model import DBUser
 
 
 class Province(BaseModel):
@@ -15,3 +16,5 @@ class DBProvince(SQLModel, table=True):
     id: UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     created_date: datetime.datetime = Field(default_factory=datetime.datetime.now)
     updated_date: datetime.datetime = Field(default_factory=datetime.datetime.now)
+
+    users: List[DBUser] = Relationship(back_populates="province")
