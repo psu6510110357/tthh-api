@@ -1,17 +1,17 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlmodel import select
-from typing import List
+
+
+from app.schemas.province_schema import ProvinceListResponse
 from ..models.province_model import DBProvince
 from ..core.database import get_session
 
 router = APIRouter(tags=["province"])
 
 
-@router.get("/", response_model=List[DBProvince])
+@router.get("/", response_model=ProvinceListResponse)
 async def read_all_provinces(session: AsyncSession = Depends(get_session)):
     result = await session.exec(select(DBProvince))
     provinces = result.all()
-    return provinces
-
-
+    return {"provinces": provinces}
