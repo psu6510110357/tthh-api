@@ -14,7 +14,7 @@ from . import config
 
 logger = logging.getLogger(__name__)
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/v1/token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
 
 settings = config.get_settings()
 
@@ -28,16 +28,18 @@ async def get_current_user(
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
+    print("Token received:", token)  # Debug log
     try:
         payload = jwt.decode(
             token, settings.SECRET_KEY, algorithms=[security.ALGORITHM]
         )
+        print("Decoded payload:", payload)  # Debug log
         user_id = payload.get("sub")
 
         if user_id is None:
             raise credentials_exception
         try:
-            user_id = int(user_id)
+            user_id = str(user_id)
         except (TypeError, ValueError):
             raise credentials_exception
 
@@ -51,6 +53,3 @@ async def get_current_user(
 
     # Convert DBUser to User before returning
     return User(**user.__dict__)
-
-
-

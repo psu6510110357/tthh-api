@@ -3,10 +3,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlmodel import select
 from typing import List
 from ..models.province_model import DBProvince
-from ..models.user_model import DBUser
 from ..core.database import get_session
-from ..schemas.province_schema import AssignProvinceRequest
-from ..schemas.user_schema import UserResponseWithProvince
 
 router = APIRouter(tags=["province"])
 
